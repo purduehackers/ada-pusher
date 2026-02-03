@@ -1,0 +1,52 @@
+From AliExpress listing:
+https://www.aliexpress.us/item/3256801240894103.html
+
+1 L1=100% fully close length
+Lmin means the length when linear actuator 100% fully closed, meanwhile,it will touch the tail limited switch and stop automatically.
+2 Stroke means the movement length of linear actuator.
+3 L2=100% fully open length
+Lmax means the length when linear actuator 100% fully open, meanwhile,it will touch the head limited switch and stop automatically.
+Stroke 10MM    L1=64.5MM,  L2=74.5MM
+
+Linear actuator spec:
+1 Type                                       OK03 linear actuator
+2 Input                                      6V 12V 24V DC
+3 Max Load                                188N=18KG=44LBS
+4 Max Speed                              150mm per second
+5 Limited switch                         With
+6 Duty cycle                               25%
+7 Inner tube material                  Aluminum alloy
+8 Stroke length                           Max 150mm
+9 Lmin and Lmax                        Normal Lmin=Stroke+54.5
+10 Color                                     Black
+11 Operation temperature            -26 ~ +65 degree
+12 Internal potentiometers options,needs extra cost
+13 It includes a pair of mounting brackets
+
+
+
+Specifications
+
+    High-concerned chemical: None
+    Output Power: < 18.65
+    Torque: Max 188N 18KG 40LBS
+    Model Number: OK03
+    Continuous Current(A): 12V/0.4A
+    Construction: Permanent Magnet
+    Type: Tubular Motor
+    Protect Feature: Drip-proof
+    Commutation: Brush
+    Efficiency: IE 4
+    Output Power: 6W
+    Origin: Mainland China
+    Certification: UL（纺织品）,ROHS,ce,UL,ROHS,ce
+    Input: 6V 12V 24V
+    Max load: Max 188N 18KG 40LBS
+    Max speed: 150mm per second
+    Max stroke: 150MM
+    Materials: Metal gear
+    IP: IP54
+    OEM: Yes
+    Color: Black
+    Position feedback: Internal potentiometers options,needs extra cost
+    Safety: Rohs CE UL
