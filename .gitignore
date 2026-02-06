@@ -1,3 +1,8 @@
+/.vscode
+/.embuild
+/target
+/Cargo.lock
+
 # Ignore macOS DS_Store
 .DS_Store
 
