@@ -1,14 +1,16 @@
+mod l298n;
+
 use std::sync::mpsc;
 use std::thread;
-use std::time::Duration;
 
 use esp32_nimble::utilities::BleUuid;
 use esp32_nimble::{uuid128, BLEAdvertisementData, BLEDevice, NimbleProperties};
-use esp_idf_svc::hal::gpio::{Gpio25, Gpio26, Output, PinDriver};
 use esp_idf_svc::hal::prelude::Peripherals;
 use esp_idf_svc::nvs::{EspNvs, EspNvsPartition, NvsDefault};
 use esp_idf_svc::sys::EspError;
 use log::*;
+
+use l298n::L298N;
 
 const DOOR_SERVICE_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb30");
 const DOOR_COMMAND_CHAR_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb31");
@@ -48,12 +50,8 @@ fn main() -> anyhow::Result<()> {
 
     // Configure L298N driver pins
     let peripherals = Peripherals::take()?;
-    let mut ena = PinDriver::output(peripherals.pins.gpio27)?;
-    let mut in1 = PinDriver::output(peripherals.pins.gpio26)?;
-    let mut in2 = PinDriver::output(peripherals.pins.gpio25)?;
-
-    // Enable motor driver
-    ena.set_high()?;
+    let mut l298n = L298N::new(peripherals)?;
+    l298n.enable_motor()?;
 
     server.on_connect(|server, desc| {
         info!("Client connected: {:?}", desc);
@@ -92,7 +90,7 @@ fn main() -> anyhow::Result<()> {
 
     thread::spawn(move || {
         while let Ok(_) = rx.recv() {
-            match open_door(&mut in1, &mut in2) {
+            match l298n.open_door() {
                 Ok(_) => {}
                 Err(err) => {
                     error!("Failed to open door, {err:?}");
@@ -130,33 +128,4 @@ fn main() -> anyhow::Result<()> {
     loop {
         std::thread::sleep(std::time::Duration::from_secs(1));
     }
-}
-
-fn extend(
-    in1: &mut PinDriver<Gpio26, Output>,
-    in2: &mut PinDriver<Gpio25, Output>,
-) -> anyhow::Result<()> {
-    in1.set_high()?;
-    in2.set_low()?;
-    Ok(())
-}
-
-fn retract(
-    in1: &mut PinDriver<Gpio26, Output>,
-    in2: &mut PinDriver<Gpio25, Output>,
-) -> anyhow::Result<()> {
-    in1.set_low()?;
-    in2.set_high()?;
-    Ok(())
-}
-
-fn open_door(
-    in1: &mut PinDriver<Gpio26, Output>,
-    in2: &mut PinDriver<Gpio25, Output>,
-) -> anyhow::Result<()> {
-    println!("Opening door...");
-    extend(in1, in2)?;
-    thread::sleep(Duration::from_millis(2000));
-    retract(in1, in2)?;
-    Ok(())
 }
