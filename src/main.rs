@@ -13,6 +13,7 @@ use l298n::L298N;
 
 const DOOR_SERVICE_UUID: BleUuid = BleUuid::Uuid16(0xADAD);
 const DOOR_COMMAND_CHAR_UUID: BleUuid = BleUuid::Uuid16(0xADAE);
+const PAIRING_PIN: &str = env!("PAIRING_PIN");
 
 fn main() -> anyhow::Result<()> {
     // It is necessary to call this function once. Otherwise, some patches to the runtime
@@ -29,7 +30,7 @@ fn main() -> anyhow::Result<()> {
     ble_device
         .security()
         .set_auth(AuthReq::all())
-        .set_passkey(425151)
+        .set_passkey(PAIRING_PIN.parse().expect("Failed to parse pairing pin"))
         .set_io_cap(SecurityIOCap::DisplayOnly)
         .resolve_rpa();
 
