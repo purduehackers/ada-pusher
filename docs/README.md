@@ -24,7 +24,7 @@ Welcome to the `ada-pusher` documentation.
 - For suction cups:
   - The Purdue Hackers office will stock replacements, should the existing suction cups on `ada-pusher` wear out. Please ask an organizer/officer if you notice the suction cups need replacing.
   - If the particular suction cups listed in the BOM become unavailable, you may source replacements if the nub portion of the suction cup is around 14.5mm in diameter.
-  - If the particular suction cups listed in the BOM become unavailable, **and** the replacements have a different nub portion:
+  - If the particular suction cups listed in the BOM become unavailable, **and** the replacements have a different nub dimension:
     - Measure the nub diameter with a caliper.
     - Print out the `suction-cup-hole-calibration.FCStd` file in `../cad/` in this repository. You may need to export the model as a `.step` file.
     - Fit the new suction cup into the calibration and determine the correct hole diameter.
