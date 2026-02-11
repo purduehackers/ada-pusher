@@ -64,7 +64,7 @@ fn main() -> anyhow::Result<()> {
         } else {
             match save_pair_id(desc.address().to_string()) {
                 Ok(()) => {
-                    info!("Saved new client {}", desc.address().to_string());
+                    info!("Saved new client {}", desc.address());
                 }
                 Err(err) => {
                     error!("Failed to save new client, error: {err:?}")
@@ -89,7 +89,7 @@ fn main() -> anyhow::Result<()> {
     let (tx, rx) = mpsc::channel::<()>();
 
     thread::spawn(move || {
-        while let Ok(_) = rx.recv() {
+        while rx.recv().is_ok() {
             match l298n.open_door() {
                 Ok(_) => {}
                 Err(err) => {
