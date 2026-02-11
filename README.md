@@ -4,6 +4,9 @@ Companion to [door-opener][door-opener-github] to push the Bechtel ADA button
 
 [door-opener-github]: https://github.com/purduehackers/door-opener
 
+## Links
+
+- [Documentation](./docs/README.md)
 
 ## Build
 
