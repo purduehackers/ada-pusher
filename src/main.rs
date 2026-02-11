@@ -17,7 +17,6 @@ fn get_past_pair_id() -> Result<Option<String>, EspError> {
     let nvs = get_nvs()?;
     let mut buffer = [0u8; 64];
     if let Some(mac_id) = nvs.get_str(NVS_FIRST_PAIR_MAC_ID, &mut buffer)? {
-        println!("This ada-pusher was paired before to MAC ID: {}", mac_id);
         return Ok(Some(mac_id.to_string()));
     }
     Ok(None)
