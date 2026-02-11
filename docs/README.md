@@ -48,3 +48,16 @@ Welcome to the `ada-pusher` documentation.
   - Solder the 15V profile resistor and the ground pad next to it together.
   - Verify 15V output when connected to a capable 15V USB-C PD source with a multimeter.
   - **Warning**: connecting a low-power USB-C PD source or a non-PD USB-C power source will result in the voltage dropping down to the highest voltage that the PD source can supply, which will usually be 5V or 9V. `ada-pusher` will not work with those voltages.
+- For the Mini360:
+  - The used chip (at least the one from Amazon) is the `MP1482DS`, and the [datasheet can be found here](https://www.monolithicpower.com/en/documentview/productdocument/index/version/2/document_type/Datasheet/lang/en/sku/MP1482/)
+    - Funnily enough, the datasheet has a watermark saying the use is discouraged and to move over to the `MP1476`. Perhaps I have received old stock?
+  - It may be worth removing the fiddly potentiometer and replacing it with a resistor.
+    - The datasheet says Vout is determined by Vout = 0.923 * (R1 + R2) / R2
+    - On the Mini360 board, R2 appears to be 8.2k Ohms (from the `822` marking on the resistor)
+    - Thus, for Vout = 5V, R1 must be R1 = 5V * 8.2k Ohms / 0.923 - 8.2k Ohms = 36.2k Ohms
+    - Update this section after testing, perhaps use 36.2k ~ 36.3k Ohm resistor
+- For the LM2596:
+  - Same thing as Mini360 where we replace the potentiometer with a resistor:
+    - According to [the datasheet](https://www.ti.com/lit/ds/symlink/lm2596.pdf), Vout = 1.23 (1 + R2 / R1)
+    - On the board, a trimpot ([3296 datasheet](https://www.bourns.com/pdfs/3296.pdf)) provides both R1 and R2.
+    - Remove, measure, and update documentation here
