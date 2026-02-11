@@ -21,6 +21,7 @@ Welcome to the `ada-pusher` documentation.
 - For the ESP32, if replacing, try to get one with the RISC-V architecture
   - Implementation `v1` uses `ESP32-WROOM-32D`, which is based on Xtensa, and while it works, there are some annoyances where you have to install a modified toolchain and LLVM compiler from Espressif.
   - Only get Xtensa-based boards if they are significantly cheaper than the RISC-V-based ones.
+  - If you are working on `v2`+ and we have switched over to RISC-V-based ESP32 boards, please update this documentation and the main `README.md` of this repository and remove the custom toolchain/LLVM installation mention.
 - For suction cups:
   - The Purdue Hackers office will stock replacements, should the existing suction cups on `ada-pusher` wear out. Please ask an organizer/officer if you notice the suction cups need replacing.
   - If the particular suction cups listed in the BOM become unavailable, you may source replacements if the nub portion of the suction cup is around 14.5mm in diameter.
