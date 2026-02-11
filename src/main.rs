@@ -3,38 +3,16 @@ mod l298n;
 use std::sync::mpsc;
 use std::thread;
 
+use esp32_nimble::enums::{AuthReq, SecurityIOCap};
 use esp32_nimble::utilities::BleUuid;
-use esp32_nimble::{uuid128, BLEAdvertisementData, BLEDevice, NimbleProperties};
+use esp32_nimble::{BLEAdvertisementData, BLEDevice, NimbleProperties};
 use esp_idf_svc::hal::prelude::Peripherals;
-use esp_idf_svc::nvs::{EspNvs, EspNvsPartition, NvsDefault};
-use esp_idf_svc::sys::EspError;
 use log::*;
 
 use l298n::L298N;
 
-const DOOR_SERVICE_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb30");
-const DOOR_COMMAND_CHAR_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb31");
-const NVS_FIRST_PAIR_MAC_ID: &str = "fp-mac-id";
-
-fn get_nvs() -> Result<EspNvs<NvsDefault>, EspError> {
-    let nvs_default_partition: EspNvsPartition<NvsDefault> = EspNvsPartition::<NvsDefault>::take()?;
-    EspNvs::new(nvs_default_partition, "storage", true)
-}
-
-fn get_past_pair_id() -> Result<Option<String>, EspError> {
-    let nvs = get_nvs()?;
-    let mut buffer = [0u8; 64];
-    if let Some(mac_id) = nvs.get_str(NVS_FIRST_PAIR_MAC_ID, &mut buffer)? {
-        return Ok(Some(mac_id.to_string()));
-    }
-    Ok(None)
-}
-
-fn save_pair_id(id: String) -> Result<(), EspError> {
-    let mut nvs = get_nvs()?;
-    nvs.set_str(NVS_FIRST_PAIR_MAC_ID, &id)?;
-    Ok(())
-}
+const DOOR_SERVICE_UUID: BleUuid = BleUuid::Uuid16(0xADAD);
+const DOOR_COMMAND_CHAR_UUID: BleUuid = BleUuid::Uuid16(0xADAE);
 
 fn main() -> anyhow::Result<()> {
     // It is necessary to call this function once. Otherwise, some patches to the runtime
@@ -45,46 +23,30 @@ fn main() -> anyhow::Result<()> {
 
     // Initialize BLE and BLE server
     let ble_device = BLEDevice::take();
-    let server = ble_device.get_server();
     let ble_advertising = ble_device.get_advertising();
+
+    // Configure security
+    ble_device
+        .security()
+        .set_auth(AuthReq::all())
+        .set_passkey(425151)
+        .set_io_cap(SecurityIOCap::DisplayOnly)
+        .resolve_rpa();
+
+    let server = ble_device.get_server();
 
     // Configure L298N driver pins
     let peripherals = Peripherals::take()?;
     let mut l298n = L298N::new(peripherals)?;
     l298n.enable_motor()?;
 
-    server.on_connect(|server, desc| {
+    server.on_connect(|_server, desc| {
         info!("Client connected: {:?}", desc);
-        if let Ok(Some(first_pair_mac_id)) = get_past_pair_id() {
-            if first_pair_mac_id == desc.address().to_string() {
-                if let Err(err) = server.disconnect_with_reason(desc.conn_handle(), 1) {
-                    error!("Failed to kick off client, error: {err:?}")
-                }
-            }
-        } else {
-            match save_pair_id(desc.address().to_string()) {
-                Ok(()) => {
-                    info!("Saved new client {}", desc.address());
-                }
-                Err(err) => {
-                    error!("Failed to save new client, error: {err:?}")
-                }
-            }
-        }
-        ble_advertising.lock().stop().ok();
     });
 
     server.on_disconnect(|desc, reason| {
         info!("Client disconnected: {:?}, reason: {:?}", desc, reason);
-        ble_advertising.lock().start().ok();
     });
-
-    let door_service = server.create_service(DOOR_SERVICE_UUID);
-
-    let door_command_char = door_service.lock().create_characteristic(
-        DOOR_COMMAND_CHAR_UUID,
-        NimbleProperties::WRITE | NimbleProperties::READ,
-    );
 
     let (tx, rx) = mpsc::channel::<()>();
 
@@ -98,6 +60,13 @@ fn main() -> anyhow::Result<()> {
             }
         }
     });
+
+    let door_service = server.create_service(DOOR_SERVICE_UUID);
+
+    let door_command_char = door_service.lock().create_characteristic(
+        DOOR_COMMAND_CHAR_UUID,
+        NimbleProperties::READ | NimbleProperties::WRITE | NimbleProperties::WRITE_AUTHEN,
+    );
 
     // Set up callback for when data is written to the characteristic
     door_command_char.lock().on_write(move |args| {
@@ -124,6 +93,7 @@ fn main() -> anyhow::Result<()> {
     ble_advertising.lock().start()?;
     info!("BLE advertising started, waiting for connections...");
 
+    info!("Currently bonded: {:?}", ble_device.bonded_addresses());
     // Run loop
     loop {
         std::thread::sleep(std::time::Duration::from_secs(1));
