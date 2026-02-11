@@ -1,5 +1,11 @@
+use std::sync::mpsc;
+use std::thread;
+use std::time::Duration;
+
 use esp32_nimble::utilities::BleUuid;
 use esp32_nimble::{uuid128, BLEAdvertisementData, BLEDevice, NimbleProperties};
+use esp_idf_svc::hal::gpio::{Gpio25, Gpio26, Output, PinDriver};
+use esp_idf_svc::hal::prelude::Peripherals;
 use esp_idf_svc::nvs::{EspNvs, EspNvsPartition, NvsDefault};
 use esp_idf_svc::sys::EspError;
 use log::*;
@@ -40,6 +46,15 @@ fn main() -> anyhow::Result<()> {
     let server = ble_device.get_server();
     let ble_advertising = ble_device.get_advertising();
 
+    // Configure L298N driver pins
+    let peripherals = Peripherals::take()?;
+    let mut ena = PinDriver::output(peripherals.pins.gpio27)?;
+    let mut in1 = PinDriver::output(peripherals.pins.gpio26)?;
+    let mut in2 = PinDriver::output(peripherals.pins.gpio25)?;
+
+    // Enable motor driver
+    ena.set_high()?;
+
     server.on_connect(|server, desc| {
         info!("Client connected: {:?}", desc);
         if let Ok(Some(first_pair_mac_id)) = get_past_pair_id() {
@@ -73,15 +88,31 @@ fn main() -> anyhow::Result<()> {
         NimbleProperties::WRITE | NimbleProperties::READ,
     );
 
+    let (tx, rx) = mpsc::channel::<()>();
+
+    thread::spawn(move || {
+        while let Ok(_) = rx.recv() {
+            match open_door(&mut in1, &mut in2) {
+                Ok(_) => {}
+                Err(err) => {
+                    error!("Failed to open door, {err:?}");
+                }
+            }
+        }
+    });
+
     // Set up callback for when data is written to the characteristic
-    door_command_char.lock().on_write(|args| {
+    door_command_char.lock().on_write(move |args| {
         let data = args.recv_data();
         info!("Received data: {:?}", data);
 
-        // Check for your specific command (e.g., "OPEN")
-        if data == b"OPEN" {
-            info!("Opening door!");
-            open_door();
+        if data == b"open" {
+            match tx.send(()) {
+                Ok(_) => {}
+                Err(err) => {
+                    error!("Failed to notify door opener thread, {err:?}")
+                }
+            }
         }
     });
 
@@ -93,7 +124,6 @@ fn main() -> anyhow::Result<()> {
 
     // Start advertising
     ble_advertising.lock().start()?;
-
     info!("BLE advertising started, waiting for connections...");
 
     // Run loop
@@ -102,6 +132,31 @@ fn main() -> anyhow::Result<()> {
     }
 }
 
-fn open_door() {
-    info!("Would've opened door...");
+fn extend(
+    in1: &mut PinDriver<Gpio26, Output>,
+    in2: &mut PinDriver<Gpio25, Output>,
+) -> anyhow::Result<()> {
+    in1.set_high()?;
+    in2.set_low()?;
+    Ok(())
+}
+
+fn retract(
+    in1: &mut PinDriver<Gpio26, Output>,
+    in2: &mut PinDriver<Gpio25, Output>,
+) -> anyhow::Result<()> {
+    in1.set_low()?;
+    in2.set_high()?;
+    Ok(())
+}
+
+fn open_door(
+    in1: &mut PinDriver<Gpio26, Output>,
+    in2: &mut PinDriver<Gpio25, Output>,
+) -> anyhow::Result<()> {
+    println!("Opening door...");
+    extend(in1, in2)?;
+    thread::sleep(Duration::from_millis(2000));
+    retract(in1, in2)?;
+    Ok(())
 }
