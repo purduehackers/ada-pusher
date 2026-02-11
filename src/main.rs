@@ -6,6 +6,7 @@ use log::*;
 
 const DOOR_SERVICE_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb30");
 const DOOR_COMMAND_CHAR_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb31");
+const NVS_FIRST_PAIR_MAC_ID: &str = "fp-mac-id";
 
 fn get_nvs() -> Result<EspNvs<NvsDefault>, EspError> {
     let nvs_default_partition: EspNvsPartition<NvsDefault> = EspNvsPartition::<NvsDefault>::take()?;
@@ -15,7 +16,7 @@ fn get_nvs() -> Result<EspNvs<NvsDefault>, EspError> {
 fn get_past_pair_id() -> Result<Option<String>, EspError> {
     let nvs = get_nvs()?;
     let mut buffer = [0u8; 64];
-    if let Some(mac_id) = nvs.get_str("first-pair-mac-id", &mut buffer)? {
+    if let Some(mac_id) = nvs.get_str(NVS_FIRST_PAIR_MAC_ID, &mut buffer)? {
         println!("This ada-pusher was paired before to MAC ID: {}", mac_id);
         return Ok(Some(mac_id.to_string()));
     }
@@ -24,7 +25,7 @@ fn get_past_pair_id() -> Result<Option<String>, EspError> {
 
 fn save_pair_id(id: String) -> Result<(), EspError> {
     let mut nvs = get_nvs()?;
-    nvs.set_str("first-pair-mac-id", &id)?;
+    nvs.set_str(NVS_FIRST_PAIR_MAC_ID, &id)?;
     Ok(())
 }
 
