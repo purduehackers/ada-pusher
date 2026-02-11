@@ -20,25 +20,33 @@ impl L298N {
         })
     }
 
-    pub fn enable_motor(&mut self) -> Result<(), EspError> {
+    pub fn open_door(&mut self) -> Result<(), EspError> {
+        self.forward()?;
+        self.enable_motor()?;
+        thread::sleep(Duration::from_millis(2000));
+        self.backward()?;
+        thread::sleep(Duration::from_millis(2000));
+        self.disable_motor()?;
+        Ok(())
+    }
+
+    fn enable_motor(&mut self) -> Result<(), EspError> {
         self.ena.set_high()?;
         Ok(())
     }
 
-    pub fn open_door(&mut self) -> Result<(), EspError> {
-        self.extend()?;
-        thread::sleep(Duration::from_millis(2000));
-        self.retract()?;
+    fn disable_motor(&mut self) -> Result<(), EspError> {
+        self.ena.set_low()?;
         Ok(())
     }
 
-    fn extend(&mut self) -> Result<(), EspError> {
+    fn forward(&mut self) -> Result<(), EspError> {
         self.in1.set_high()?;
         self.in2.set_low()?;
         Ok(())
     }
 
-    fn retract(&mut self) -> Result<(), EspError> {
+    fn backward(&mut self) -> Result<(), EspError> {
         self.in1.set_low()?;
         self.in2.set_high()?;
         Ok(())

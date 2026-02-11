@@ -38,7 +38,6 @@ fn main() -> anyhow::Result<()> {
     // Configure L298N driver pins
     let peripherals = Peripherals::take()?;
     let mut l298n = L298N::new(peripherals)?;
-    l298n.enable_motor()?;
 
     server.on_connect(|_server, desc| {
         info!("Client connected: {:?}", desc);
