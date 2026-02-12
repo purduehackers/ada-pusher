@@ -60,4 +60,10 @@ Welcome to the `ada-pusher` documentation.
   - Same thing as Mini360 where we replace the potentiometer with a resistor:
     - According to [the datasheet](https://www.ti.com/lit/ds/symlink/lm2596.pdf), Vout = 1.23 (1 + R2 / R1)
     - On the board, a trimpot ([3296 datasheet](https://www.bourns.com/pdfs/3296.pdf)) provides both R1 and R2.
-    - Remove, measure, and update documentation here
+      ![3296 potentiometer](./images/3296-potentiometer.png)
+    - After setting the trimpot to output 12V and desoldering it, the measurements are as follows:
+      - Between pins 1 and 2: 2.38k Ohms
+      - Between pins 2 and 3: 7.48k Ohms
+      - Between pins 1 and 3 (total): 9.8k Ohms
+    - Solder resistors such that both legs are in the center pin, and the other legs of the resistors go to each pin hole on either side. In the image, the right resistor is 2.4k Ohms, and the left resistor is 7.5k Ohms.
+      ![LM2596 after resistors are soldered](./images/lm2596-resistor.png)
