@@ -66,4 +66,4 @@ Welcome to the `ada-pusher` documentation.
       - Between pins 2 and 3: 7.48k Ohms
       - Between pins 1 and 3 (total): 9.8k Ohms
     - Solder resistors such that both legs are in the center pin, and the other legs of the resistors go to each pin hole on either side. In the image, the right resistor is 2.4k Ohms, and the left resistor is 7.5k Ohms.
-      ![LM2596 after resistors are soldered](./images/lm2596-resistor.png)
+      ![LM2596 after resistors are soldered](./images/lm2596-resistor.jpg)
