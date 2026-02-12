@@ -55,7 +55,10 @@ Welcome to the `ada-pusher` documentation.
     - The datasheet says Vout is determined by Vout = 0.923 * (R1 + R2) / R2
     - On the Mini360 board, R2 appears to be 8.2k Ohms (from the `822` marking on the resistor)
     - Thus, for Vout = 5V, R1 must be R1 = 5V * 8.2k Ohms / 0.923 - 8.2k Ohms = 36.2k Ohms
-    - Update this section after testing, perhaps use 36.2k ~ 36.3k Ohm resistor
+    - With testing (theory only goes so far), needed 36.9k Ohms total in order to get stable 5V. Wired 3.9k and 33k Ohm resistors in series:
+      ![Mini360 after resistors are soldered](./images/mini360-resistor.jpg)
+    - Note: You could also solder between the left pad and the middle pad, not squeeze into the left top and bottom. I did so because I ripped the middle pad off while clipping off the original potentiometer.
+    - Wrap with Kapton tape to prevent shorting before assembly.
 - For the LM2596:
   - Same thing as Mini360 where we replace the potentiometer with a resistor:
     - According to [the datasheet](https://www.ti.com/lit/ds/symlink/lm2596.pdf), Vout = 1.23 (1 + R2 / R1)
