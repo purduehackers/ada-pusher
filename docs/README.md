@@ -40,6 +40,7 @@ Welcome to the `ada-pusher` documentation.
 ![Circuit diagram](./wiring-diagram/image.png)
 
 - Make sure to remove both jumpers from the `ENA` and `ENB` pins of the `L298N` driver.
+- Not specified in the diagram; you **must** also remove the voltage regulator jumper (above the 12V and `GND` terminals)! This is because we supply our own 5V, and having it conflict with the 5V voltage regulator of the `L298N` driver board would be problematic!
 - Adjust the potentiometer on the Mini360 until the output voltage is 5V when input is 15V.
 - Adjust the potentiometer on the LM2596 until the output voltage is 12V when input is 15V.
 - For the USB-C trigger board:
