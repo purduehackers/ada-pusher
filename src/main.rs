@@ -38,6 +38,7 @@ fn main() -> anyhow::Result<()> {
     esp_idf_svc::log::EspLogger::initialize_default();
 
     // Initialize BLE and BLE server
+    BLEDevice::set_device_name("ada-pusher").expect("Failed to set device name");
     let ble_device = BLEDevice::take();
     let ble_advertising = ble_device.get_advertising();
 
