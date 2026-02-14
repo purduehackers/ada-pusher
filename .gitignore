@@ -8,3 +8,6 @@
 
 # Ignore FreeCAD backups
 cad/*.FCBak
+
+# Ignore dotenv files
+.env

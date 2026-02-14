@@ -21,6 +21,14 @@ cargo binstall espflash
 cargo binstall ldproxy
 ```
 
+Create a `.env` file with the following contents:
+
+```
+PAIRING_PIN=123456
+```
+
+This is the pairing PIN used by `ada-pusher`. Replace with a suitable 6-digit PIN.
+
 Then, build with `cargo build`.
 
 Connect the ESP32 board to your computer and run:
