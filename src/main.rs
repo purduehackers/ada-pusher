@@ -54,7 +54,9 @@ fn main() -> anyhow::Result<()> {
     thread::spawn(move || {
         while rx.recv().is_ok() {
             match l298n.open_door() {
-                Ok(_) => {}
+                Ok(_) => {
+                    info!("Sent signal to L298N driver to open door!");
+                }
                 Err(err) => {
                     error!("Failed to open door, {err:?}");
                 }
@@ -76,7 +78,9 @@ fn main() -> anyhow::Result<()> {
 
         if data == b"open" {
             match tx.send(()) {
-                Ok(_) => {}
+                Ok(_) => {
+                    debug!("Sent signal to door opener thread");
+                }
                 Err(err) => {
                     error!("Failed to notify door opener thread, {err:?}")
                 }
@@ -93,7 +97,6 @@ fn main() -> anyhow::Result<()> {
     // Start advertising
     ble_advertising.lock().start()?;
     info!("BLE advertising started, waiting for connections...");
-
     info!("Currently bonded: {:?}", ble_device.bonded_addresses());
     // Run loop
     loop {
