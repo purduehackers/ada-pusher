@@ -5,14 +5,14 @@ use std::thread;
 
 use esp32_nimble::enums::{AuthReq, SecurityIOCap};
 use esp32_nimble::utilities::BleUuid;
-use esp32_nimble::{BLEAdvertisementData, BLEDevice, NimbleProperties};
+use esp32_nimble::{uuid128, BLEAdvertisementData, BLEDevice, NimbleProperties};
 use esp_idf_svc::hal::prelude::Peripherals;
 use log::*;
 
 use l298n::L298N;
 
-const DOOR_SERVICE_UUID: BleUuid = BleUuid::Uuid16(0xADAD);
-const DOOR_COMMAND_CHAR_UUID: BleUuid = BleUuid::Uuid16(0xADAE);
+const DOOR_SERVICE_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb30");
+const DOOR_COMMAND_CHAR_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb31");
 const PAIRING_PIN: &str = env!("PAIRING_PIN");
 
 fn main() -> anyhow::Result<()> {
