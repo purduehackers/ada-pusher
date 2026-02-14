@@ -26,7 +26,6 @@ fn led_blink(led: &mut PinDriver<'_, impl OutputPin, Output>) -> Result<(), EspE
         led.set_low()?;
         thread::sleep(std::time::Duration::from_millis(100));
     }
-    led.set_high()?;
     Ok(())
 }
 
