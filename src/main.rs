@@ -7,7 +7,9 @@ use dotenvy_macro::dotenv;
 use esp32_nimble::enums::{AuthReq, SecurityIOCap};
 use esp32_nimble::utilities::BleUuid;
 use esp32_nimble::{uuid128, BLEAdvertisementData, BLEDevice, NimbleProperties};
+use esp_idf_svc::hal::gpio::{Output, OutputPin, PinDriver};
 use esp_idf_svc::hal::prelude::Peripherals;
+use esp_idf_svc::sys::EspError;
 use log::*;
 
 use l298n::L298N;
@@ -15,6 +17,18 @@ use l298n::L298N;
 const DOOR_SERVICE_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb30");
 const DOOR_COMMAND_CHAR_UUID: BleUuid = uuid128!("7e783540-f3ab-431f-adff-566767b8bb31");
 const PAIRING_PIN: &str = dotenv!("PAIRING_PIN");
+
+fn led_blink(led: &mut PinDriver<'_, impl OutputPin, Output>) -> Result<(), EspError> {
+    // Rapidly flash the LED five times
+    for _ in 0..5 {
+        led.set_high()?;
+        thread::sleep(std::time::Duration::from_millis(100));
+        led.set_low()?;
+        thread::sleep(std::time::Duration::from_millis(100));
+    }
+    led.set_high()?;
+    Ok(())
+}
 
 fn main() -> anyhow::Result<()> {
     // It is necessary to call this function once. Otherwise, some patches to the runtime
@@ -39,7 +53,12 @@ fn main() -> anyhow::Result<()> {
 
     // Configure L298N driver pins
     let peripherals = Peripherals::take()?;
-    let mut l298n = L298N::new(peripherals)?;
+    let mut onboard_led = PinDriver::output(peripherals.pins.gpio2)?;
+    let mut l298n = L298N::new(
+        PinDriver::output(peripherals.pins.gpio27)?,
+        PinDriver::output(peripherals.pins.gpio26)?,
+        PinDriver::output(peripherals.pins.gpio25)?,
+    )?;
 
     server.on_connect(|_server, desc| {
         info!("Client connected: {:?}", desc);
@@ -55,6 +74,7 @@ fn main() -> anyhow::Result<()> {
         while rx.recv().is_ok() {
             match l298n.open_door() {
                 Ok(_) => {
+                    let _ = led_blink(&mut onboard_led);
                     info!("Sent signal to L298N driver to open door!");
                 }
                 Err(err) => {

@@ -1,23 +1,32 @@
 use std::thread;
 use std::time::Duration;
 
-use esp_idf_svc::hal::gpio::{Gpio25, Gpio26, Gpio27, Output, PinDriver};
-use esp_idf_svc::hal::prelude::Peripherals;
+use esp_idf_svc::hal::gpio::{Output, OutputPin, PinDriver};
 use esp_idf_svc::sys::EspError;
 
-pub struct L298N {
-    ena: PinDriver<'static, Gpio27, Output>,
-    in1: PinDriver<'static, Gpio26, Output>,
-    in2: PinDriver<'static, Gpio25, Output>,
+pub struct L298N<ENA, IN1, IN2>
+where
+    ENA: OutputPin,
+    IN1: OutputPin,
+    IN2: OutputPin,
+{
+    ena: PinDriver<'static, ENA, Output>,
+    in1: PinDriver<'static, IN1, Output>,
+    in2: PinDriver<'static, IN2, Output>,
 }
 
-impl L298N {
-    pub fn new(peripherals: Peripherals) -> Result<Self, EspError> {
-        Ok(Self {
-            ena: PinDriver::output(peripherals.pins.gpio27)?,
-            in1: PinDriver::output(peripherals.pins.gpio26)?,
-            in2: PinDriver::output(peripherals.pins.gpio25)?,
-        })
+impl<ENA, IN1, IN2> L298N<ENA, IN1, IN2>
+where
+    ENA: OutputPin,
+    IN1: OutputPin,
+    IN2: OutputPin,
+{
+    pub fn new(
+        ena: PinDriver<'static, ENA, Output>,
+        in1: PinDriver<'static, IN1, Output>,
+        in2: PinDriver<'static, IN2, Output>,
+    ) -> Result<Self, EspError> {
+        Ok(Self { ena, in1, in2 })
     }
 
     pub fn open_door(&mut self) -> Result<(), EspError> {
