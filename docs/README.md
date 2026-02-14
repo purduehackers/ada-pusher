@@ -13,7 +13,7 @@ Welcome to the `ada-pusher` documentation.
 | Mini360 | [Amazon](https://www.amazon.com/dp/B08HQDSQZP) | Buck converter (15V -> 5V), suitable for low power applications such as the ESP32 board |
 | USB-C PD Trigger Board | [Amazon](https://www.amazon.com/dp/B0CFTXRHLV) | Any trigger board should work, just make sure it supports 15V profile at minimum! |
 | Suction cups | [Amazon](https://www.amazon.com/dp/B0DFLZ5FX4) | Other suction cups may need calibration, see notes below |
-
+| 100 nF (0.1 uF) capacitor | | |
 
 
 ### Notes
@@ -39,8 +39,9 @@ Welcome to the `ada-pusher` documentation.
 
 ![Circuit diagram](./wiring-diagram/image.png)
 
-- Make sure to remove both jumpers from the `ENA` and `ENB` pins of the `L298N` driver.
-- Not specified in the diagram; you **must** also remove the voltage regulator jumper (above the 12V and `GND` terminals)! This is because we supply our own 5V, and having it conflict with the 5V voltage regulator of the `L298N` driver board would be problematic!
+- For the `L298N` driver:
+  - Make sure to remove all jumpers. This includes the `ENA` and `ENB` pins, and the voltage regulator jumper (above the 12V and `GND` terminals)! This is because we supply our own 5V, and having it conflict with the 5V voltage regulator of the `L298N` driver board would be problematic!
+  - Solder a 100 nF (0.1 uF) capacitor across the output pins (the pins that connect to the linear actuator)
 - Adjust the potentiometer on the Mini360 until the output voltage is 5V when input is 15V.
 - Adjust the potentiometer on the LM2596 until the output voltage is 12V when input is 15V.
 - For the USB-C trigger board:

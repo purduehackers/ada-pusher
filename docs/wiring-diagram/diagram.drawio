@@ -1,6 +1,6 @@
 <mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:147.0) Gecko/20100101 Firefox/147.0" version="29.3.8">
   <diagram name="Page-1" id="XL8EaEORlhMG9sjbrvmT">
-    <mxGraphModel dx="1109" dy="2030" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+    <mxGraphModel dx="1184" dy="1942" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
       <root>
         <mxCell id="0" />
         <mxCell id="1" parent="0" />
@@ -58,8 +58,8 @@
             <mxPoint x="612" y="176" as="targetPoint" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="rlIIsdLUg--cNzKPi7gp-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Warning: remove both jumpers from ENA/ENB" vertex="1">
-          <mxGeometry height="30" width="130" x="593.17" y="250" as="geometry" />
+        <mxCell id="rlIIsdLUg--cNzKPi7gp-12" parent="1" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Remove all jumpers" vertex="1">
+          <mxGeometry height="30" width="130" x="644.5" y="200" as="geometry" />
         </mxCell>
         <mxCell id="rlIIsdLUg--cNzKPi7gp-13" parent="1" style="rounded=0;whiteSpace=wrap;html=1;" value="&lt;div&gt;Linear Actuator&lt;/div&gt;" vertex="1">
           <mxGeometry height="60" width="120" x="170" y="-60" as="geometry" />
@@ -223,6 +223,23 @@
           <mxGeometry height="50" relative="1" width="50" as="geometry">
             <mxPoint x="551" y="767.72" as="sourcePoint" />
             <mxPoint x="414" y="681" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="M7Dk9YzKTIUZgB8v2HV5-1" parent="1" style="pointerEvents=1;verticalLabelPosition=bottom;shadow=0;dashed=0;align=center;html=1;verticalAlign=top;shape=mxgraph.electrical.capacitors.capacitor_1;" value="&lt;div&gt;100 nF&lt;/div&gt;&lt;div&gt;(0.1 uF)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="60" x="370" y="-10" as="geometry" />
+        </mxCell>
+        <mxCell id="M7Dk9YzKTIUZgB8v2HV5-3" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fillColor=#f8cecc;strokeColor=#000000;strokeWidth=7;entryX=0;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="M7Dk9YzKTIUZgB8v2HV5-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="370" y="130" as="sourcePoint" />
+            <mxPoint x="330" y="130" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="M7Dk9YzKTIUZgB8v2HV5-4" edge="1" parent="1" style="endArrow=none;html=1;rounded=0;fillColor=#f8cecc;strokeColor=#b85450;strokeWidth=7;entryX=1;entryY=0.5;entryDx=0;entryDy=0;entryPerimeter=0;" target="M7Dk9YzKTIUZgB8v2HV5-1" value="">
+          <mxGeometry height="50" relative="1" width="50" as="geometry">
+            <Array as="points" />
+            <mxPoint x="430" y="100" as="sourcePoint" />
+            <mxPoint x="440" y="50" as="targetPoint" />
           </mxGeometry>
         </mxCell>
       </root>
