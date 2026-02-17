@@ -7,7 +7,7 @@
 .DS_Store
 
 # Ignore FreeCAD backups
-cad/*.FCBak
+*.FCBak
 
 # Ignore dotenv files
 .env
