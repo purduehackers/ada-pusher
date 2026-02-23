@@ -2,9 +2,9 @@
 name = "ada-pusher"
 version = "0.1.0"
 authors = ["Eric Park <me@ericswpark.com>"]
-edition = "2021"
+edition = "2024"
 resolver = "2"
-rust-version = "1.77"
+rust-version = "1.85"
 
 [[bin]]
 name = "ada-pusher"
