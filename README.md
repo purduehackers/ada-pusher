@@ -38,3 +38,28 @@ espflash flash --monitor target/xtensa-esp32-espidf/debug/ada-pusher
 ```
 
 [esp32-rs-start]: https://docs.espressif.com/projects/rust/book/getting-started/index.html
+
+## Troubleshooting
+
+### Max path on Windows
+
+On Windows, you may encounter the following error:
+
+```
+error: failed to run custom build command for `esp-idf-sys v0.36.1`
+
+Caused by:
+  process didn't exit successfully: `C:\Users\user\Projects\ada-pusher\target\debug\build\esp-idf-sys-585097b028c03f00\build-script-build` (exit code: 1)
+  --- stderr
+  Error: Too long output directory: `\\?\C:\Users\user\Projects\ada-pusher\target\xtensa-esp32-espidf\debug\build\esp-idf-sys-7336b0b778f8f8a0\out`. Shorten your project path down to no more than 10 characters (or use WSL2 and its native Linux filesystem). Note that tricks like Windows `subst` do NOT work!
+warning: build failed, waiting for other jobs to finish...
+```
+
+This is because you need to explicitly opt in to long file paths on Windows.
+Recent versions of Windows enable long paths by default, but you need to let
+ESP-IDF know of this. Set the environment variable:
+
+```
+$env:ESP_IDF_PATH_ISSUES = "warn"
+```
+
