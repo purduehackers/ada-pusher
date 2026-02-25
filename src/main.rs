@@ -4,12 +4,12 @@ use std::sync::mpsc;
 use std::thread;
 
 use dotenvy_macro::dotenv;
-use esp32_nimble::enums::{AuthReq, SecurityIOCap};
-use esp32_nimble::utilities::BleUuid;
-use esp32_nimble::{uuid128, BLEAdvertisementData, BLEDevice, NimbleProperties};
 use esp_idf_svc::hal::gpio::{Output, OutputPin, PinDriver};
 use esp_idf_svc::hal::prelude::Peripherals;
 use esp_idf_svc::sys::EspError;
+use esp32_nimble::enums::{AuthReq, SecurityIOCap};
+use esp32_nimble::utilities::BleUuid;
+use esp32_nimble::{BLEAdvertisementData, BLEDevice, NimbleProperties, uuid128};
 use log::*;
 
 use l298n::L298N;
