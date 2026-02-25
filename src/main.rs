@@ -10,7 +10,7 @@ use esp_idf_svc::sys::EspError;
 use esp32_nimble::enums::{AuthReq, SecurityIOCap};
 use esp32_nimble::utilities::BleUuid;
 use esp32_nimble::{BLEAdvertisementData, BLEDevice, NimbleProperties, uuid128};
-use log::{info, error, debug};
+use log::{debug, error, info};
 
 use l298n::L298N;
 
