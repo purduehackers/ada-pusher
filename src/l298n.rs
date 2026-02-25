@@ -25,8 +25,8 @@ where
         ena: PinDriver<'static, ENA, Output>,
         in1: PinDriver<'static, IN1, Output>,
         in2: PinDriver<'static, IN2, Output>,
-    ) -> Result<Self, EspError> {
-        Ok(Self { ena, in1, in2 })
+    ) -> Self {
+        Self { ena, in1, in2 }
     }
 
     pub fn open_door(&mut self) -> Result<(), EspError> {

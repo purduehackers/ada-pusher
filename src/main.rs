@@ -10,7 +10,7 @@ use esp_idf_svc::sys::EspError;
 use esp32_nimble::enums::{AuthReq, SecurityIOCap};
 use esp32_nimble::utilities::BleUuid;
 use esp32_nimble::{BLEAdvertisementData, BLEDevice, NimbleProperties, uuid128};
-use log::*;
+use log::{info, error, debug};
 
 use l298n::L298N;
 
@@ -58,14 +58,14 @@ fn main() -> anyhow::Result<()> {
         PinDriver::output(peripherals.pins.gpio27)?,
         PinDriver::output(peripherals.pins.gpio26)?,
         PinDriver::output(peripherals.pins.gpio25)?,
-    )?;
+    );
 
     server.on_connect(|_server, desc| {
-        info!("Client connected: {:?}", desc);
+        info!("Client connected: {desc:?}");
     });
 
     server.on_disconnect(|desc, reason| {
-        info!("Client disconnected: {:?}, reason: {:?}", desc, reason);
+        info!("Client disconnected: {desc:?}, reason: {reason:?}");
     });
 
     let (tx, rx) = mpsc::channel::<()>();
@@ -73,7 +73,7 @@ fn main() -> anyhow::Result<()> {
     thread::spawn(move || {
         while rx.recv().is_ok() {
             match l298n.open_door() {
-                Ok(_) => {
+                Ok(()) => {
                     let _ = led_blink(&mut onboard_led);
                     info!("Sent signal to L298N driver to open door!");
                 }
@@ -94,15 +94,15 @@ fn main() -> anyhow::Result<()> {
     // Set up callback for when data is written to the characteristic
     door_command_char.lock().on_write(move |args| {
         let data = args.recv_data();
-        info!("Received data: {:?}", data);
+        info!("Received data: {data:?}");
 
         if data == b"open" {
             match tx.send(()) {
-                Ok(_) => {
+                Ok(()) => {
                     debug!("Sent signal to door opener thread");
                 }
                 Err(err) => {
-                    error!("Failed to notify door opener thread, {err:?}")
+                    error!("Failed to notify door opener thread, {err:?}");
                 }
             }
         }

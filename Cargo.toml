@@ -6,6 +6,9 @@ edition = "2024"
 resolver = "2"
 rust-version = "1.85"
 
+[lints.clippy]
+pedantic = "deny"
+
 [[bin]]
 name = "ada-pusher"
 harness = false # do not use the built-in cargo test harness -> resolve rust-analyzer errors
