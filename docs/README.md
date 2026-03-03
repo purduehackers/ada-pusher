@@ -22,6 +22,7 @@ Welcome to the `ada-pusher` documentation.
   - Implementation `v1` uses `ESP32-WROOM-32D`, which is based on Xtensa, and while it works, there are some annoyances where you have to install a modified toolchain and LLVM compiler from Espressif.
   - Only get Xtensa-based boards if they are significantly cheaper than the RISC-V-based ones.
   - If you are working on `v2`+ and we have switched over to RISC-V-based ESP32 boards, please update this documentation and the main `README.md` of this repository and remove the custom toolchain/LLVM installation mention.
+  - WARNING: different ESP32 boards may have different pinouts. If you have replaced the boards, do NOT put them on the pre-existing perfboard without verifying the pinout or you may fry your ESP32 board!
 - For suction cups:
   - The Purdue Hackers office will stock replacements, should the existing suction cups on `ada-pusher` wear out. Please ask an organizer/officer if you notice the suction cups need replacing.
   - If the particular suction cups listed in the BOM become unavailable, you may source replacements if the nub portion of the suction cup is around 14.5mm in diameter.
